@@ -1,2 +1,3 @@
-# jojoba-talk
-호호바톡, 호호바페이
+# JoJoBa Talk
+
+![jojoba](jojoba.jpeg)
