@@ -1,7 +1,10 @@
 plugins {
     id 'java'
+    id "idea"
+    id "jacoco"
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group 'kr.jojoba'
@@ -13,14 +16,148 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    QUERYDSL_VERSION = "5.0.0"
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}"
+    implementation "com.querydsl:querydsl-apt:${QUERYDSL_VERSION}"
+    implementation 'com.h2database:h2:1.4.200'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
+    implementation 'org.flywaydb:flyway-core:7.15.0'
+    testImplementation 'com.h2database:h2:1.4.200'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
 test {
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco.exec")
+    }
+
     useJUnitPlatform()
+
+    finalizedBy "jacocoTestReport"
+}
+
+jacoco {
+    // JaCoCo 버전
+    toolVersion = "0.8.5"
+
+//  테스트결과 리포트를 저장할 경로 변경
+//  default는 "${project.reporting.baseDir}/jacoco"
+//  reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        // 원하는 리포트를 켜고 끌 수 있다.
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+
+//      각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있다.
+//      html.destination file("$buildDir/jacocoHtml")
+//      xml.destination file("$buildDir/jacoco.xml")
+    }
+
+    finalizedBy "jacocoTestCoverageVerification"
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            // "element"가 없으면 프로젝트의 전체 파일을 합친 값을 기준으로 한다.
+            limit {
+                // "counter"를 지정하지 않으면 default는 "INSTRUCTION"
+                // "value"를 지정하지 않으면 default는 "COVEREDRATIO"
+                minimum = 0.00
+            }
+        }
+
+        rule {
+            // 룰을 간단히 켜고 끌 수 있다.
+            enabled = true
+
+            // 룰을 체크할 단위는 클래스 단위
+            element = "CLASS"
+
+            // 브랜치 커버리지를 최소한 90% 만족시켜야 한다.
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = 0.00
+            }
+
+            // 라인 커버리지를 최소한 80% 만족시켜야 한다.
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = 0.00
+            }
+
+            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한한다.
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = 200
+//              maximum = 8
+            }
+        }
+    }
+}
+
+task testCoverage(type: Test) {
+    group "verification"
+    description "Runs the unit tests with coverage"
+
+    dependsOn(":test",
+            ":jacocoTestReport",
+            ":jacocoTestCoverageVerification")
+
+    tasks["jacocoTestReport"].mustRunAfter(tasks["test"])
+    tasks["jacocoTestCoverageVerification"].mustRunAfter(tasks["jacocoTestReport"])
+}
+
+jar {
+    enabled = false
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude module: "logback-classic"
+    }
+
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
