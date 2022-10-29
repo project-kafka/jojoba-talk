@@ -28,6 +28,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:${SPRING_STATER_VERSION}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${SPRING_STATER_VERSION}"
     implementation "org.springframework.boot:spring-boot-starter-log4j2:${SPRING_STATER_VERSION}"
+    implementation "org.springframework.data:spring-data-envers:${SPRING_STATER_VERSION}"
     implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}"
     implementation "com.querydsl:querydsl-apt:${QUERYDSL_VERSION}"
