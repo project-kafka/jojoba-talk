@@ -3,7 +3,10 @@ package kr.jojoba.finance.wallet.domain;
 import kr.jojoba.commons.BaseTimeStamp;
 import kr.jojoba.finance.wallet.constraints.WireState;
 import kr.jojoba.finance.wallet.constraints.WireType;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,7 +14,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,16 +53,6 @@ public class WireHistory extends BaseTimeStamp {
 
     @Column(columnDefinition = "bigint")
     private Long amount;
-
-    @Override
-    public LocalDateTime getCreatedAt() {
-        return super.getCreatedAt();
-    }
-
-    @Override
-    public LocalDateTime getUpdatedAt() {
-        return super.getUpdatedAt();
-    }
 
     @Override
     public boolean equals(Object o) {

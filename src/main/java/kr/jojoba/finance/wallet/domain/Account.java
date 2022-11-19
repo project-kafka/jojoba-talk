@@ -1,15 +1,15 @@
 package kr.jojoba.finance.wallet.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
 @EqualsAndHashCode
-@Builder
 @ToString
-@NoArgsConstructor
 public class Account {
 
     private String bank;

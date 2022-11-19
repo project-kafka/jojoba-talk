@@ -1,7 +1,10 @@
 package kr.jojoba.finance.wallet.domain;
 
 import kr.jojoba.commons.BaseTimeStamp;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -9,8 +12,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,20 +42,6 @@ public class Wallet extends BaseTimeStamp {
     private Long amount;
 
     @Override
-    public LocalDateTime getCreatedAt() {
-        return super.getCreatedAt();
-    }
-
-    @Override
-    public LocalDateTime getUpdatedAt() {
-        return super.getUpdatedAt();
-    }
-
-    public void updateAmount(final Long amount) {
-        this.amount = amount;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Wallet)) return false;
@@ -62,4 +53,5 @@ public class Wallet extends BaseTimeStamp {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }
