@@ -1,25 +1,28 @@
 package kr.jojoba.finance.wallet.domain;
 
-import kr.jojoba.commons.Timestamp;
+import kr.jojoba.commons.BaseTimeStamp;
 import kr.jojoba.finance.wallet.constraints.WireState;
 import kr.jojoba.finance.wallet.constraints.WireType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "wire_history")
 @Getter
-@EqualsAndHashCode
-@ToString
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 @DynamicInsert
-public class WireHistory extends Timestamp {
+public class WireHistory extends BaseTimeStamp {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -35,9 +38,8 @@ public class WireHistory extends Timestamp {
     @Enumerated(EnumType.STRING)
     private WireState wireState;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "sender_wallet_id")
-    private Wallet wallet;
+    @Column(name = "sender_wallet_id")
+    private Long senderWalletId;
 
     @Embedded
     @AttributeOverrides({
@@ -50,13 +52,26 @@ public class WireHistory extends Timestamp {
     @Column(columnDefinition = "bigint")
     private Long amount;
 
-    @Builder
-    public WireHistory(UUID id, WireType wireType, WireState wireState, Wallet wallet, Account account, Long amount) {
-        this.id = id;
-        this.wireType = wireType;
-        this.wireState = wireState;
-        this.wallet = wallet;
-        this.account = account;
-        this.amount = amount;
+    @Override
+    public LocalDateTime getCreatedAt() {
+        return super.getCreatedAt();
+    }
+
+    @Override
+    public LocalDateTime getUpdatedAt() {
+        return super.getUpdatedAt();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WireHistory)) return false;
+        WireHistory that = (WireHistory) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

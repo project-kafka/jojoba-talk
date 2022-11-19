@@ -1,7 +1,8 @@
 package kr.jojoba.finance.wallet.domain;
 
-import kr.jojoba.commons.Timestamp;
+import kr.jojoba.commons.BaseTimeStamp;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,17 +10,19 @@ import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "wallet")
 @Getter
-@EqualsAndHashCode
-@ToString
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
 @Audited
-public class Wallet extends Timestamp {
+public class Wallet extends BaseTimeStamp {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -33,14 +36,30 @@ public class Wallet extends Timestamp {
     @Column(columnDefinition = "bigint")
     private Long amount;
 
-    @Builder
-    public Wallet(UUID id, Long userId, Long amount) {
-        this.id = id;
-        this.userId = userId;
-        this.amount = amount;
+    @Override
+    public LocalDateTime getCreatedAt() {
+        return super.getCreatedAt();
+    }
+
+    @Override
+    public LocalDateTime getUpdatedAt() {
+        return super.getUpdatedAt();
     }
 
     public void updateAmount(final Long amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Wallet)) return false;
+        Wallet wallet = (Wallet) o;
+        return Objects.equals(id, wallet.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

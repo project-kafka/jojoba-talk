@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Getter
 @EqualsAndHashCode
+@Builder
 @ToString
 @NoArgsConstructor
 public class Account {
@@ -14,11 +15,4 @@ public class Account {
     private String bank;
     private String accountNumber;
     private String accountHolder;
-
-    @Builder
-    public Account(String bank, String accountNumber, String accountHolder) {
-        this.bank = bank;
-        this.accountNumber = accountNumber;
-        this.accountHolder = accountHolder;
-    }
 }
