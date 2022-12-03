@@ -15,13 +15,13 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
-@Entity(name = "talk_message")
+@Entity(name = "chatting_room")
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Audited
-public class TalkMessage extends BaseTimeStamp {
+public class ChattingRoom extends BaseTimeStamp {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -29,15 +29,9 @@ public class TalkMessage extends BaseTimeStamp {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "text", nullable = false)
-    private String text;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "talker_id", nullable = false)
-    private String talkerId;
-
-    @Column(name = "room_id", nullable = false)
-    private String roomId;
-
-    @Column(name = "attachment_id")
-    private String attachmentId;
+    @Column(name = "joined_user_id", nullable = false)
+    private String joinedUserId;
 }
