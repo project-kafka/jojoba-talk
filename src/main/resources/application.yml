@@ -3,29 +3,36 @@ spring:
     activate:
       on-profile: default
   datasource:
-    driver-class-name: jdbc:h2:mem:jojoba;MODE=MySQL;
-    url: jdbc:mysql://localhost:23306/jojoba?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-    username: jojoba
-    password: jojoba123
-    jpa:
-      generate-ddl: true
-      database-platform: org.hibernate.dialect.H2Dialect
-      properties:
-        hibernate:
-          temp.use_jdbc_metadata_defaults: false
-          id.new_generator_mappings: true
-          show_sql: false
-          hbm2ddl.auto: create-drop
-logging:
-  level:
-    org:
+    url: jdbc:h2:mem:jojoba;MODE=MySQL;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
       hibernate:
-        SQL: debug
+        temp.use_jdbc_metadata_defaults: false
+        id.new_generator_mappings: true
+        show_sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  flyway:
+    enabled: false
 decorator:
   datasource:
     p6spy:
       enable-logging: true
       multiline: true
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        SQL: debug
 
 ---
 
@@ -34,17 +41,20 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/jojoba?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&rewriteBatchedStatements=true
-    username: jojoba
-    password: jojoba123
+    username: root
+    password: password
+  flyway:
+    enabled: false
   jpa:
+    hibernate:
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
         id.new_generator_mappings: true
         show_sql: false
-        hbm2ddl.auto: validate
 decorator:
   datasource:
     p6spy:
@@ -52,6 +62,7 @@ decorator:
       multiline: false
 logging:
   level:
+    root: info
     org:
       hibernate:
         SQL: info
