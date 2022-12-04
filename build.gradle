@@ -36,6 +36,7 @@ dependencies {
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1"
     implementation "org.flywaydb:flyway-core:7.15.0"
     testImplementation "com.h2database:h2:1.4.200"
+    runtimeOnly 'mysql:mysql-connector-java'
 
     compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
     annotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
@@ -150,8 +151,13 @@ sourceSets {
     main.java.srcDir querydslDir
 }
 
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+    if (file(querydslDir).exists())
+        delete(file(querydslDir))
 }
 
 configurations {
