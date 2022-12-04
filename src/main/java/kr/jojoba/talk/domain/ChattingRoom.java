@@ -13,14 +13,12 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 
 @Entity(name = "chatting_room")
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Audited
 public class ChattingRoom extends BaseTimeStamp {
 
     @Id
