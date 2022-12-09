@@ -18,17 +18,16 @@ repositories {
 
 ext {
     QUERYDSL_VERSION = "5.0.0"
-    SPRING_STATER_VERSION = "2.7.5"
     LOMBOK_VERSION = "1.18.24"
     JUNIT_VERSION = "5.7.0"
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${SPRING_STATER_VERSION}"
-    implementation "org.springframework.boot:spring-boot-starter-web:${SPRING_STATER_VERSION}"
-    implementation "org.springframework.boot:spring-boot-starter-validation:${SPRING_STATER_VERSION}"
-    implementation "org.springframework.boot:spring-boot-starter-log4j2:${SPRING_STATER_VERSION}"
-    implementation "org.springframework.data:spring-data-envers:${SPRING_STATER_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-log4j2"
+    implementation "org.springframework.data:spring-data-envers"
     implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}"
     implementation "com.querydsl:querydsl-apt:${QUERYDSL_VERSION}"
@@ -43,6 +42,7 @@ dependencies {
 
     testCompileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
     testAnnotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_VERSION}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_VERSION}"
 }
