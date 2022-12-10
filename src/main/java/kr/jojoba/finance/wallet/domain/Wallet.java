@@ -6,11 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,9 +21,6 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicInsert
-@DynamicUpdate
-@Audited
 public class Wallet extends BaseTimeStamp {
 
     @Id
@@ -35,8 +29,8 @@ public class Wallet extends BaseTimeStamp {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "user_id", unique = true, nullable = false, updatable = false)
+    private UUID userId;
 
     @Column(columnDefinition = "bigint")
     private Long amount;
@@ -54,4 +48,15 @@ public class Wallet extends BaseTimeStamp {
         return Objects.hash(id);
     }
 
+    public void takeOutMoney(Long amount) {
+        if (amount > this.amount) {
+            throw new IllegalArgumentException("금액이 충분치 않습니다.");
+        }
+
+        this.amount -= amount;
+    }
+
+    public void putInMoney(Long amount) {
+        this.amount += amount;
+    }
 }
