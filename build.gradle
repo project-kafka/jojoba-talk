@@ -19,7 +19,6 @@ repositories {
 ext {
     QUERYDSL_VERSION = "5.0.0"
     LOMBOK_VERSION = "1.18.24"
-    JUNIT_VERSION = "5.7.0"
 }
 
 dependencies {
@@ -43,8 +42,6 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
     testAnnotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_VERSION}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_VERSION}"
 }
 
 test {
