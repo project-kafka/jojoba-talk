@@ -1,0 +1,33 @@
+spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    url: jdbc:h2:mem:jojoba;MODE=MySQL;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+        id.new_generator_mappings: true
+        show_sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        SQL: debug
