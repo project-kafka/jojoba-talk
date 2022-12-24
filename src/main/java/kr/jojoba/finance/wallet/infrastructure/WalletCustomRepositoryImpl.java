@@ -1,4 +1,4 @@
-package kr.jojoba.finance.wallet.infrastrucrture;
+package kr.jojoba.finance.wallet.infrastructure;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
